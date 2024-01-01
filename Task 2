@@ -1,0 +1,34 @@
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.corpus import stopwords
+import string
+
+# Завантаження стоп-слів
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
+
+# Зчитування тексту з файлу
+with open('input.txt', 'r', encoding='utf-8') as file:
+    text = file.read()
+
+# Токенізація по словах
+tokens = word_tokenize(text)
+
+# Лематизація та стеммінг
+lemmatizer = WordNetLemmatizer()
+stemmer = PorterStemmer()
+lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
+stemmed_tokens = [stemmer.stem(token) for token in tokens]
+
+# Видалення стоп-слів
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [token for token in lemmatized_tokens if token.lower() not in stop_words]
+
+# Видалення пунктуації
+filtered_tokens = [token for token in filtered_tokens if token not in string.punctuation]
+
+# Запис обробленого тексту у файл
+with open('output.txt', 'w', encoding='utf-8') as file:
+    file.write(' '.join(filtered_tokens))
