@@ -1,0 +1,34 @@
+import nltk
+from nltk.corpus import gutenberg
+import matplotlib.pyplot as plt
+from collections import Counter
+import string
+nltk.download('punkt')
+
+
+# Завантаження тексту з Project Gutenberg
+nltk.download('gutenberg')
+text = gutenberg.raw('edgeworth-parents.txt')
+
+# Розділення тексту на слова
+words = nltk.word_tokenize(text)
+
+# Визначення функції для очищення слова від пунктуації та інших символів
+def clean_word(word):
+    word = word.lower()
+    word = word.strip(string.punctuation + '‘’“”\'"')
+    return word
+
+# Очищення слів від пунктуації та інших символів
+cleaned_words = [clean_word(word) for word in words if clean_word(word) and clean_word(word) not in nltk.corpus.stopwords.words('english')]
+
+# Визначення 10 найбільш вживаних слів та побудова стовпчастої діаграми
+word_freq = Counter(cleaned_words)
+top_words, top_word_counts = zip(*word_freq.most_common(10))
+
+plt.figure(figsize=(10, 5))
+plt.bar(top_words, top_word_counts, color='skyblue')
+plt.title('Top 10 Most Common Words (After Removing Stop Words, Punctuation, Quotes, Dashes, and Apostrophes)')
+plt.xlabel('Words')
+plt.ylabel('Frequency')
+plt.show()
